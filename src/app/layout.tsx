@@ -27,8 +27,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <head>
-        <meta name="mobile-web-app-capable" content="yes" />
+      <body className="font-sans antialiased min-h-screen bg-[#0B1C3D]">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          {children}
+        </ThemeProvider>
+        
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -40,11 +43,6 @@ export default function RootLayout({
             `,
           }}
         />
-      </head>
-      <body className="font-sans antialiased min-h-screen bg-[#0B1C3D]">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          {children}
-        </ThemeProvider>
       </body>
     </html>
   );
