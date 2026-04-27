@@ -1,10 +1,15 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
+import './globals.css';
+import { ThemeProvider } from '@/components/ThemeProvider';
+
+export const viewport: Viewport = {
+  themeColor: '#F59E0B',
+};
 
 export const metadata: Metadata = {
   title: 'Dashboard Admin — Manne Rent',
   applicationName: 'Admin Manne Rent',
   manifest: '/manifest.json',
-  themeColor: '#F59E0B',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -21,17 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#F59E0B" />
-        <meta name="application-name" content="Admin Manne Rent" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Admin Manne Rent" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icons/admin-icon-192.png" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -44,8 +41,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body style={{ margin: 0, background: '#0B1C3D' }}>
-        {children}
+      <body className="font-sans antialiased min-h-screen bg-[#0B1C3D]">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
