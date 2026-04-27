@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { ToastProvider } from '@/context/ToastContext';
 
 export const viewport: Viewport = {
   themeColor: '#F59E0B',
@@ -29,7 +30,9 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className="font-sans antialiased min-h-screen bg-[#0B1C3D]">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          {children}
+          <ToastProvider>
+            {children}
+          </ToastProvider>
         </ThemeProvider>
         
         <script
