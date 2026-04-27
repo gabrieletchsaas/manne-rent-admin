@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #0B1C3D;
+  --brand-royal: #1E3A8A;
+  --brand-orange: #F59E0B;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Premium Selection */
+::selection {
+  background-color: #F59E0B;
+  color: #0B1C3D;
+}
+
+/* Custom Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 10px;
+  border: 3px solid white;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #F59E0B;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #F1F5F9 transparent;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .luxury-blur {
+    @apply backdrop-blur-xl bg-[#0B1C3D]/60 border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)];
+  }
+
+  /* Nouvelle classe Glassmorphism stricte demandée */
+  .glass-luxury {
+    @apply backdrop-blur-md bg-[#0B1C3D]/65 border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)];
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+  }
+
+  .glow-orange {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+  }
+
+  .heading-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-deep via-brand-royal to-brand-orange;
+  }
+}
+
+/* Custom Scrollbar for specific containers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 10px;
+  border: none;
+}
+
+/* Marquee Animations */
+@keyframes marquee-forward {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+@keyframes marquee-backward {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@layer utilities {
+  .animate-marquee-forward {
+    animation: marquee-forward 40s linear infinite;
+  }
+
+  .animate-marquee-backward {
+    animation: marquee-backward 40s linear infinite;
+  }
+
+  .marquee-mask {
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  }
+  
+  .pause-on-hover:hover .animate-marquee-forward,
+  .pause-on-hover:hover .animate-marquee-backward {
+    animation-play-state: paused;
+  }
+}
+
+/* Mobile Optimizations / PWA */
+html, body {
+  overscroll-behavior-y: contain;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  /* Prevent auto-zoom on iOS */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  /* Touch targets — 48px minimum (WCAG 2.5.5) */
+  button,
+  [role="button"] {
+    min-height: 48px;
+  }
+}
+
+/* ── Safe Area Utilities (iPhone notch / home indicator) ── */
+@layer utilities {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+  /* Card shadow premium */
+  .shadow-card {
+    box-shadow: 0 4px 24px -4px rgba(11, 28, 61, 0.10), 0 1px 4px rgba(11, 28, 61, 0.06);
+  }
+
+  /* Scrollbar hidden (horizontal scroll tabs) */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Mobile drawer pull tab — chevron bounce to the right */
+  @keyframes tab-pulse {
+    0%, 100% { transform: translateX(0px); opacity: 0.7; }
+    40%       { transform: translateX(4px); opacity: 1;   }
+    60%       { transform: translateX(2px); opacity: 1;   }
+  }
+  .animate-tab-pulse {
+    animation: tab-pulse 2.2s ease-in-out infinite;
+  }
+  /* ── Mask Overlays for horizontal scroll indications ── */
+  .mask-fade-right {
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  }
+  .mask-fade-left {
+    mask-image: linear-gradient(to left, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to left, black 85%, transparent 100%);
+  }
+  .mask-fade-both {
+    mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  }
+}
+
+/* ── Anti-Capture and Anti-Print (Production Only) ── */
+@media not print {
+  body.production-mode {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
+
+@media print {
+  body {
+    display: none !important;
+  }
+}
+
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.animate-heart-pop {
+  animation: heart-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Classic Dark Mode Overrides */
+html.classic-dark { background-color: #1a1a2e !important; }
+html.classic-dark .dark\:bg-slate-900 { background-color: #1a1a2e !important; }
+html.classic-dark .dark\:bg-slate-800 { background-color: #16213e !important; }

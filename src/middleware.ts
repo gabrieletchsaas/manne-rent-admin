@@ -1,23 +1,53 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
 
-export function middleware(request: NextRequest) {
-  const url = request.nextUrl.clone();
+const CTO_EMAILS = ['gabrieletchisse@gmail.com', 'mannerentcontact@gmail.com'];
 
-  // Si racine → rediriger vers dashboard admin
-  if (url.pathname === '/') {
-    return NextResponse.redirect(
-      new URL('https://manne-rent-app.vercel.app/dashboard/admin')
-    );
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Racine → dashboard admin directement
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/dashboard/admin', request.url));
   }
 
-  // Toutes les autres routes → pointer vers le projet principal
-  const mainAppUrl = 'https://manne-rent-app.vercel.app';
-  const targetUrl = new URL(url.pathname + url.search, mainAppUrl);
+  // Protection de la route /dashboard/admin
+  if (pathname.startsWith('/dashboard/admin')) {
+    let response = NextResponse.next({ request });
 
-  return NextResponse.redirect(targetUrl);
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() { return request.cookies.getAll(); },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              response.cookies.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    const isAdmin = CTO_EMAILS.includes(user.email ?? '');
+    if (!isAdmin) {
+      return NextResponse.redirect(new URL('/unauthorized', request.url));
+    }
+
+    return response;
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|icons|manifest.json).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|icons|manifest.json|sw.js).*)'],
 };
