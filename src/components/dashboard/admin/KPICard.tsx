@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion, animate } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface KPICardProps {
   name: string;
@@ -25,6 +26,7 @@ const KPICard = ({
   colorHex
 }: KPICardProps) => {
   const [count, setCount] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     const controls = animate(0, numericValue, {
@@ -47,32 +49,59 @@ const KPICard = ({
     return `${x},${y}`;
   }).join(" ");
 
+  const handleNavigation = () => {
+    if (name.toLowerCase().includes("utilisateurs")) router.push("/dashboard/admin/users");
+    else if (name.toLowerCase().includes("biens")) router.push("/dashboard/admin/properties");
+    else if (name.toLowerCase().includes("mrr") || name.toLowerCase().includes("revenus")) router.push("/dashboard/admin/transactions");
+    else router.push("/dashboard/admin/analytics");
+  };
+
   return (
     <motion.div
-      whileHover={{ translateY: -4 }}
+      onClick={handleNavigation}
+      whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
-      className="bg-white dark:bg-[#0B1C3D]/50 backdrop-blur-xl border border-slate-100 dark:border-white/5 p-6 rounded-[24px] shadow-[0_4px_24px_rgba(0,0,0,0.06)] relative overflow-hidden group border-l-[4px]"
-      style={{ borderLeftColor: colorHex }}
+      className="p-6 relative overflow-hidden group cursor-pointer transition-all duration-300"
+      style={{ 
+        background: 'linear-gradient(145deg, var(--bg-secondary, #0d1f3c), var(--bg-primary, #0a1628))',
+        border: '1px solid rgba(201,168,76,0.2)',
+        borderRadius: '16px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(201,168,76,0.5)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(201,168,76,0.2)';
+      }}
     >
       <div className="flex items-start justify-between mb-6">
-        <div className={cn("p-3 rounded-2xl bg-opacity-10", color.replace('bg-', 'bg-opacity-10 text-'))} style={{ backgroundColor: `${colorHex}15`, color: colorHex }}>
+        <div 
+          className="p-3 flex items-center justify-center transition-colors"
+          style={{ 
+            background: 'rgba(201,168,76,0.15)', 
+            border: '1px solid rgba(201,168,76,0.3)',
+            borderRadius: '12px',
+            color: '#c9a84c'
+          }}
+        >
           <Icon className="w-6 h-6" />
         </div>
         <div className={cn(
-          "flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black tracking-tight",
-          changeType === "increase" ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
+          "flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black tracking-tight border",
+          changeType === "increase" ? "bg-[#10b981]/10 text-[#10b981] border-[#10b981]/20" : "bg-[#ef4444]/10 text-[#ef4444] border-[#ef4444]/20"
         )}>
           {change} {changeType === "increase" ? "↑" : "↓"}
         </div>
       </div>
 
       <div className="space-y-1">
-        <p className="text-[10px] font-black text-slate-400 dark:text-white/20 uppercase tracking-[0.2em]">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: 'var(--text-secondary, #94a3b8)' }}>
           {name}
         </p>
-        <h2 className="text-[2.5rem] font-bold text-[#1A1A2E] dark:text-white leading-none tracking-tighter">
+        <h2 className="text-[2.5rem] font-bold leading-none tracking-tighter" style={{ color: 'var(--text-primary, #ffffff)' }}>
           {numericValue > 1000 ? count.toLocaleString() : count}{name.includes('Taux') ? '%' : ''}
-          {name.includes('MRR') && <span className="text-sm ml-1 font-medium text-slate-400">FCFA</span>}
+          {name.includes('MRR') && <span className="text-sm ml-1 font-medium opacity-50">FCFA</span>}
         </h2>
       </div>
 
@@ -82,15 +111,15 @@ const KPICard = ({
         <div className="h-10 w-full opacity-50 group-hover:opacity-100 transition-opacity">
           <svg viewBox="0 0 100 40" className="w-full h-full overflow-visible">
             <defs>
-              <linearGradient id={`grad-${name}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={colorHex} stopOpacity="0.5" />
-                <stop offset="100%" stopColor={colorHex} stopOpacity="0" />
+              <linearGradient id={`grad-${name.replace(/\s+/g, '-')}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#c9a84c" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#c9a84c" stopOpacity="0" />
               </linearGradient>
             </defs>
             <path
               d={`M ${points}`}
               fill="none"
-              stroke={colorHex}
+              stroke="#c9a84c"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -98,23 +127,23 @@ const KPICard = ({
             />
             <path
               d={`M 0,40 L ${points} L 100,40 Z`}
-              fill={`url(#grad-${name})`}
+              fill={`url(#grad-${name.replace(/\s+/g, '-')})`}
               className="opacity-20"
             />
           </svg>
         </div>
 
         <div className="space-y-2">
-          <div className="h-1.5 w-full bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: "65%" }}
               transition={{ duration: 1.5, delay: 0.5 }}
               className="h-full rounded-full"
-              style={{ backgroundColor: colorHex }}
+              style={{ background: 'linear-gradient(90deg, #1a3a6b, #c9a84c)' }}
             />
           </div>
-          <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+          <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-secondary, #94a3b8)' }}>
             <span>65% ce mois</span>
             <span>vs mois dernier</span>
           </div>

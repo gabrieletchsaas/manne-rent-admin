@@ -5,6 +5,7 @@ import { checkIsAdmin } from "@/app/actions/admin";
 import { redirect } from "next/navigation";
 import AdminMobileBottomBar from "@/components/dashboard/admin/AdminMobileBottomBar";
 import AdminInstallPrompt from "@/components/dashboard/admin/AdminInstallPrompt";
+import { SmartRefreshButton } from "@/components/dashboard/SmartRefreshButton";
 
 import { Metadata } from "next";
 
@@ -36,14 +37,14 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F9FE] flex flex-col lg:flex-row font-sans overflow-hidden">
+    <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col lg:flex-row font-sans overflow-hidden transition-colors duration-300">
       <AdminSidebar />
-      <main className="flex-1 overflow-y-auto pb-[90px] lg:pb-0">
+      <main className="flex-1 overflow-y-auto pb-24 lg:pb-0 custom-scrollbar relative">
         {children}
+        <SmartRefreshButton />
       </main>
       <AdminInstallPrompt />
       <AdminMobileBottomBar />
     </div>
   );
 }
-

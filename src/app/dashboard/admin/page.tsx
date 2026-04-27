@@ -15,8 +15,9 @@ import {
 } from "@heroicons/react/24/solid";
 import DashboardMobileHeader from "@/components/dashboard/DashboardMobileHeader";
 import KPICard from "@/components/dashboard/admin/KPICard";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { NotificationBell } from "@/components/dashboard/NotificationBell";
 
@@ -111,43 +112,32 @@ export default function AdminDashboardPage() {
           <motion.h1 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-4xl font-display font-bold text-[#1A1A2E] dark:text-white"
+            className="text-4xl font-display font-bold tracking-tight"
+            style={{ color: '#f0d080', textShadow: '0 2px 10px rgba(201,168,76,0.4)' }}
           >
             {greeting}
           </motion.h1>
           <div className="flex items-center gap-3 mt-2">
-            <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                <div className="w-2 h-2 bg-[#10B981] rounded-full animate-pulse" />
+            <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: 'var(--text-secondary, #94a3b8)' }}>
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#10b981', boxShadow: '0 0 10px rgba(16,185,129,0.5)' }} />
                 Données en temps réel
             </span>
-            <span className="text-slate-300">|</span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Bienvenue sur Manne Rent</span>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: 'var(--text-secondary, #94a3b8)' }}>Bienvenue sur Manne Rent</span>
           </div>
         </div>
         
         <div className="flex items-center gap-4">
-          {mounted && (
-            <div className="flex bg-white dark:bg-white/5 p-1 rounded-2xl border border-slate-100 dark:border-white/10">
-              <button 
-                onClick={() => setTheme("light")}
-                className={cn("p-2 rounded-xl transition-all", theme === "light" ? "bg-slate-100 text-[#F59E0B] shadow-sm" : "text-slate-400 hover:text-slate-600")}
-              >
-                <SunIcon className="w-5 h-5" />
-              </button>
-              <button 
-                onClick={() => setTheme("dark")}
-                className={cn("p-2 rounded-xl transition-all", theme === "dark" ? "bg-slate-800 text-[#F59E0B] shadow-sm" : "text-slate-400 hover:text-slate-300")}
-              >
-                <MoonIcon className="w-5 h-5" />
-              </button>
-            </div>
-          )}
-
-          <NotificationBell className="relative p-2.5 bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl text-slate-400 hover:text-slate-600 dark:hover:text-white transition-all shadow-sm" />
+          <ThemeToggle />
+          <NotificationBell className="relative p-2.5 rounded-2xl transition-all shadow-sm" />
 
           <button 
             onClick={loadKPIs}
-            className="flex items-center gap-2 px-6 py-3 bg-[#0B1C3D] text-white rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-[#1E3A8A] transition-all shadow-xl shadow-blue-900/10 active:scale-95"
+            className="flex items-center gap-2 px-6 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(201,168,76,0.3)] active:scale-95"
+            style={{
+              background: 'linear-gradient(135deg, #c9a84c, #f0d080)',
+              color: '#0a1628'
+            }}
           >
             <ArrowPathIcon className={cn("w-4 h-4", isLoading && "animate-spin")} />
             Actualiser

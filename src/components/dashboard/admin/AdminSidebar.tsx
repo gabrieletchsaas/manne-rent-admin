@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
-import ThemeSelector from "@/components/ui/ThemeSelector";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface SidebarLink {
     name: string;
@@ -131,7 +131,7 @@ const AdminSidebar = () => {
                         <div className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em] mb-6 px-1">Configuration</div>
                         <div className="flex items-center justify-between px-5 py-4 bg-white/5 rounded-2xl border border-white/5 mb-4">
                             <span className="text-xs font-bold text-white/60">Mode Sombre</span>
-                            <ThemeSelector />
+                            <ThemeToggle />
                         </div>
                     </div>
                 </div>

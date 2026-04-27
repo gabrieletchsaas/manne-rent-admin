@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { ThemeProvider } from '@/components/ThemeProvider';
+import { ThemeProvider } from '@/context/ThemeContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { AuthProvider } from '@/context/AuthContext';
 
@@ -29,8 +29,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className="font-sans antialiased min-h-screen bg-[#0B1C3D]">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+      <body className="font-sans antialiased min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
+        <ThemeProvider>
           <AuthProvider>
             <ToastProvider>
               {children}
