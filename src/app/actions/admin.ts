@@ -1,3 +1,5 @@
+"use server";
+
 import { createClient } from "@supabase/supabase-js";
 
 // On ne crée plus le client au top-level pour éviter de faire planter le build Vercel
