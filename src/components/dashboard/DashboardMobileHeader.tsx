@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { BellIcon, ArrowLeftIcon, Bars3Icon } from "@heroicons/react/24/solid";
+import { BellIcon, Bars3Icon } from "@heroicons/react/24/solid";
 import AvatarUpload from "@/components/dashboard/AvatarUpload";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -39,7 +39,6 @@ const DashboardMobileHeader = ({
   extraActions,
   children,
 }: DashboardMobileHeaderProps) => {
-  const router = useRouter();
   const [greeting, setGreeting] = useState(() => getGreeting(firstName));
 
   // Mise à jour de la salutation à chaque minute
@@ -59,13 +58,6 @@ const DashboardMobileHeader = ({
       {/* Ligne 1 : Structure Premium */}
       <div className="flex items-center justify-between mb-8 mt-6 relative z-10">
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => router.push('/')}
-            className="w-10 h-10 bg-white/5 backdrop-blur-xl text-white rounded-full flex items-center justify-center border border-white/10 active:scale-90 transition-all"
-            aria-label="Retour Accueil"
-          >
-            <ArrowLeftIcon className="w-5 h-5" />
-          </button>
           <button
             onClick={() => window.dispatchEvent(new Event('openMobileMenu'))}
             className="w-10 h-10 bg-[#F59E0B] text-[#0B1C3D] rounded-full flex items-center justify-center shadow-lg border border-white/20 active:scale-90 transition-all"
