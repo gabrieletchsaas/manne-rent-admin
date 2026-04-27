@@ -9,9 +9,7 @@ import {
   ChartBarIcon,
   ArrowTrendingUpIcon,
   UserPlusIcon,
-  ArrowPathIcon,
-  SunIcon,
-  MoonIcon
+  ArrowPathIcon
 } from "@heroicons/react/24/solid";
 import DashboardMobileHeader from "@/components/dashboard/DashboardMobileHeader";
 import KPICard from "@/components/dashboard/admin/KPICard";
@@ -24,8 +22,7 @@ import { NotificationBell } from "@/components/dashboard/NotificationBell";
 export default function AdminDashboardPage() {
   const [kpis, setKpis] = useState<Record<string, any> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
 
   const loadKPIs = async () => {
     setIsLoading(true);
@@ -35,7 +32,6 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    setMounted(true);
     loadKPIs();
     
     // Simulate a welcome toast or notification
