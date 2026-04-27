@@ -1,13 +1,33 @@
+'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('https://manne-rent-app.vercel.app/dashboard/admin');
+  }, [router]);
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', textAlign: 'center', color: '#c9a84c', fontFamily: 'sans-serif' }}>
-      <head>
-        <title>Dashboard Admin</title>
-        <meta httpEquiv="refresh" 
-              content="0;url=https://manne-rent-app.vercel.app/dashboard/admin" />
-      </head>
-      <img src="/icons/admin-512.png" width="120" style={{ marginBottom: 20 }} alt="Logo" />
-      <p>Redirection vers le Dashboard Admin...</p>
+    <div style={{
+      background: '#0B1C3D',
+      height: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#F59E0B',
+      fontFamily: 'Arial',
+    }}>
+      <div style={{ textAlign: 'center' }}>
+        <img
+          src="/icons/admin-icon-192.png"
+          width="80"
+          alt="Admin Manne Rent"
+          style={{ marginBottom: 16 }}
+        />
+        <p style={{ fontSize: 14, opacity: 0.8 }}>Chargement du Dashboard Admin...</p>
+      </div>
     </div>
-  )
+  );
 }
