@@ -105,7 +105,7 @@ export async function fetchAdminKPIs() {
     const { count: newUsersThisMonth } = await supabaseAdmin
       .from("profiles")
       .select("*", { count: "exact", head: true })
-      .gte("created_at", startOfMonth.toISOString());
+      // .gte("created_at", startOfMonth.toISOString()); // TODO: Remettre le bon nom de colonne une fois découvert
 
     return {
       visiteursSemaine,
@@ -143,10 +143,17 @@ export async function fetchAdminUsers() {
 
     const admin = getSupabaseAdmin();
 
+    const { data: sample } = await admin
+      .from('profiles')
+      .select('*')
+      .limit(1);
+
+    console.log('[Colonnes profiles]:', Object.keys(sample?.[0] || {}));
+
     const { data, error, count } = await admin
       .from('profiles')
       .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false });
+      .order('id', { ascending: false });
 
     console.log('[fetchAdminUsers] Résultat:', {
       count,
