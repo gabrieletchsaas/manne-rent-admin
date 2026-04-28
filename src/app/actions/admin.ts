@@ -134,17 +134,27 @@ export async function fetchAdminKPIs() {
 // ─── Utilisateurs ─────────────────────────────────────────────────────────────
 export async function fetchAdminUsers() {
   try {
+    // Debug logs (temporaires)
+    console.log('[fetchAdminUsers] SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30));
+    console.log('[fetchAdminUsers] SERVICE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+
     const supabaseAdmin = getSupabaseAdmin();
-    const { data, error } = await supabaseAdmin
+
+    const { data, error, count } = await supabaseAdmin
       .from("profiles")
-      .select("*")
+      .select("*", { count: "exact" })
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
-    return data || [];
-  } catch (error) {
-    console.error("Erreur fetchAdminUsers:", error);
-    return [];
+    if (error) {
+      console.error("[fetchAdminUsers] Erreur Supabase:", error);
+      return { users: [], count: 0 };
+    }
+
+    console.log("[fetchAdminUsers] Users trouvés:", count, "| Données:", data?.length);
+    return { users: data || [], count: count || 0 };
+  } catch (err) {
+    console.error("[fetchAdminUsers] Exception:", err);
+    return { users: [], count: 0 };
   }
 }
 
