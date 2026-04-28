@@ -46,6 +46,7 @@ export function SmartRefreshButton() {
     <button
       onClick={handleRefresh}
       disabled={isRefreshing}
+      className="hidden lg:flex flex-col items-center justify-center gap-[2px]"
       style={{
         position: 'fixed',
         bottom: '80px',
@@ -59,11 +60,6 @@ export function SmartRefreshButton() {
         border: '2px solid rgba(201,168,76,0.5)',
         boxShadow: '0 4px 20px rgba(201,168,76,0.3)',
         cursor: isRefreshing ? 'not-allowed' : 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '2px',
         transition: 'all 0.3s ease',
         zIndex: 1000,
       }}

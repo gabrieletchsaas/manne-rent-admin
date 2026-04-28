@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { BellIcon, Bars3Icon, ArrowLeftIcon } from "@heroicons/react/24/solid";
+import { BellIcon, Bars3Icon, ArrowLeftIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
 import AvatarUpload from "@/components/dashboard/AvatarUpload";
 import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -42,6 +42,14 @@ const DashboardMobileHeader = ({
   const [greeting, setGreeting] = useState(() => getGreeting(firstName));
   const router = useRouter();
   const pathname = usePathname();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    router.refresh();
+    setTimeout(() => setIsRefreshing(false), 500);
+  };
 
   // Mise à jour de la salutation à chaque minute
   useEffect(() => {
@@ -97,6 +105,17 @@ const DashboardMobileHeader = ({
 
         <div className="flex items-center gap-2">
           {extraActions}
+          <button 
+            onClick={handleRefresh}
+            className={cn(
+              "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 shadow-xl",
+              "bg-white/5 backdrop-blur-xl text-[#F59E0B] border border-[rgba(201,168,76,0.3)] hover:bg-[rgba(201,168,76,0.15)] active:scale-90",
+              isRefreshing && "rotate-[360deg]"
+            )}
+            title="Actualiser"
+          >
+            <ArrowPathIcon className="w-5 h-5" />
+          </button>
           <button
             className="relative w-10 h-10 flex items-center justify-center rounded-full bg-white/5 backdrop-blur-xl text-[#f0d080] border border-[rgba(201,168,76,0.3)] hover:bg-[rgba(201,168,76,0.15)] transition-all active:scale-90 shadow-xl group"
             aria-label="Notifications"
