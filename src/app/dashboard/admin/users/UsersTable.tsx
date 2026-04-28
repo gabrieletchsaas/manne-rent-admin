@@ -240,12 +240,12 @@ export function UsersTable({ initialUsers }: { initialUsers: UserRow[] }) {
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
               <tr className="bg-slate-50/50 dark:bg-white/5 border-b border-slate-100 dark:border-white/5">
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Utilisateur</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Rôle</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Plan</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Inscription</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Statut</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Actions</th>
+                <th className="px-8 py-6 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-wider">Utilisateur</th>
+                <th className="px-8 py-6 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-wider">Rôle</th>
+                <th className="px-8 py-6 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-wider">Plan</th>
+                <th className="px-8 py-6 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-wider">Inscription</th>
+                <th className="px-8 py-6 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-wider">Statut</th>
+                <th className="px-8 py-6 text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-white/5">
