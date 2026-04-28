@@ -4,16 +4,21 @@ import { createClient } from "@supabase/supabase-js";
 
 // ─── Client Supabase Admin (Service Role Key — bypasse le RLS) ────────────────
 function getSupabaseAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!supabaseUrl || !supabaseServiceKey) {
+  console.log('[Admin] URL:', url?.substring(0, 30));
+  console.log('[Admin] KEY exists:', !!key);
+  console.log('[Admin] KEY length:', key?.length);
+
+  if (!url || !key) {
     throw new Error(
-      "Variables d'environnement Supabase manquantes (URL ou SUPABASE_SERVICE_ROLE_KEY)."
+      'Variables Supabase manquantes: ' +
+        JSON.stringify({ hasUrl: !!url, hasKey: !!key })
     );
   }
 
-  return createClient(supabaseUrl, supabaseServiceKey, {
+  return createClient(url, key, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
@@ -134,27 +139,38 @@ export async function fetchAdminKPIs() {
 // ─── Utilisateurs ─────────────────────────────────────────────────────────────
 export async function fetchAdminUsers() {
   try {
-    // Debug logs (temporaires)
-    console.log('[fetchAdminUsers] SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30));
-    console.log('[fetchAdminUsers] SERVICE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+    console.log('[fetchAdminUsers] Début requête...');
 
-    const supabaseAdmin = getSupabaseAdmin();
+    const admin = getSupabaseAdmin();
 
-    const { data, error, count } = await supabaseAdmin
-      .from("profiles")
-      .select("*", { count: "exact" })
-      .order("created_at", { ascending: false });
+    const { data, error, count } = await admin
+      .from('profiles')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false });
+
+    console.log('[fetchAdminUsers] Résultat:', {
+      count,
+      dataLength: data?.length,
+      error: error?.message,
+    });
 
     if (error) {
-      console.error("[fetchAdminUsers] Erreur Supabase:", error);
-      return { users: [], count: 0 };
+      console.error('[fetchAdminUsers] ERREUR Supabase:', error);
+      return { users: [], count: 0, error: error.message };
     }
 
-    console.log("[fetchAdminUsers] Users trouvés:", count, "| Données:", data?.length);
-    return { users: data || [], count: count || 0 };
+    return {
+      users: data || [],
+      count: count || 0,
+      error: null,
+    };
   } catch (err) {
-    console.error("[fetchAdminUsers] Exception:", err);
-    return { users: [], count: 0 };
+    console.error('[fetchAdminUsers] EXCEPTION:', err);
+    return {
+      users: [],
+      count: 0,
+      error: String(err),
+    };
   }
 }
 

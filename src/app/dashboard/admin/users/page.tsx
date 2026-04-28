@@ -9,7 +9,7 @@ import { UsersTable, type UserRow } from "./UsersTable";
 export const dynamic = "force-dynamic";
 
 export default async function AdminUsersPage() {
-  const { users, count } = await fetchAdminUsers();
+  const { users, count, error } = await fetchAdminUsers();
 
   return (
     <div className="p-4 lg:p-10 space-y-10 max-w-[1600px] mx-auto">
@@ -33,6 +33,22 @@ export default async function AdminUsersPage() {
           </div>
         </div>
       </div>
+
+      {/* Bandeau d'erreur visible sur la page (debug) */}
+      {error && (
+        <div className="p-6 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+          <p className="text-xs font-black uppercase tracking-widest text-red-500 mb-2">
+            ⚠️ Erreur Supabase détectée
+          </p>
+          <p className="text-sm font-mono text-red-600 dark:text-red-400 break-all">
+            {error}
+          </p>
+          <p className="text-xs text-red-400 mt-3">
+            Vérifier dans Vercel → Settings → Environment Variables :<br />
+            <strong>SUPABASE_SERVICE_ROLE_KEY</strong> doit être présente et valide.
+          </p>
+        </div>
+      )}
 
       {/* Table (Client Component pour interactivité) */}
       <UsersTable initialUsers={users as UserRow[]} />
