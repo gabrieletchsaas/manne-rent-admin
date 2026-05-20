@@ -177,33 +177,21 @@ export async function fetchAdminListings() {
       // Logements/terrains
       supabaseAdmin
         .from('properties')
-        .select(`
-          id, title, category, type, price, 
-          status, is_visible, created_at, images,
-          ville, quartier, address, owner_id
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(50),
 
       // Véhicules
       supabaseAdmin
         .from('vehicles')
-        .select(`
-          id, title, type, price,
-          status, is_visible, created_at, images,
-          ville, owner_id
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(50),
 
       // Parcelles
       supabaseAdmin
         .from('plots')
-        .select(`
-          id, title, type, price,
-          status, is_visible, created_at, images,
-          ville, owner_id
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(50),
     ]);
@@ -229,6 +217,11 @@ export async function fetchAdminListings() {
     const allListings = [
       ...(properties || []).map(p => ({
         ...p,
+        title: p.title || p.titre || 'Sans titre',
+        price: p.price || p.prix || 0,
+        city: p.city || p.ville || 'Non spécifié',
+        is_visible: p.is_visible ?? true,
+        status: p.status || 'pending',
         _table: 'properties',
         _icon: '🏠',
         _category: p.category || 'LOGEMENT',
@@ -236,6 +229,11 @@ export async function fetchAdminListings() {
       })),
       ...(vehicles || []).map(v => ({
         ...v,
+        title: v.title || v.titre || 'Sans titre',
+        price: v.price || v.prix || 0,
+        city: v.city || v.ville || 'Non spécifié',
+        is_visible: v.is_visible ?? true,
+        status: v.status || 'pending',
         _table: 'vehicles',
         _icon: '🚗',
         _category: 'VÉHICULE',
@@ -243,6 +241,11 @@ export async function fetchAdminListings() {
       })),
       ...(plots || []).map(pl => ({
         ...pl,
+        title: pl.title || pl.titre || 'Sans titre',
+        price: pl.price || pl.prix || 0,
+        city: pl.city || pl.ville || 'Non spécifié',
+        is_visible: pl.is_visible ?? true,
+        status: pl.status || 'pending',
         _table: 'plots',
         _icon: '🌿',
         _category: 'PARCELLE',
