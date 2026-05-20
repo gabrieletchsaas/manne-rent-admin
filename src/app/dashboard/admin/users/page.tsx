@@ -9,7 +9,9 @@ import { UsersTable, type UserRow } from "./UsersTable";
 export const dynamic = "force-dynamic";
 
 export default async function AdminUsersPage() {
-  const { users, count, error } = await fetchAdminUsers();
+  const users = await fetchAdminUsers();
+  const count = users.length;
+  const error = null;
 
   return (
     <div className="p-4 lg:p-10 space-y-10 max-w-[1600px] mx-auto">

@@ -9,20 +9,22 @@ import {
   ChartBarIcon,
   ArrowTrendingUpIcon,
   UserPlusIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  SunIcon,
+  MoonIcon
 } from "@heroicons/react/24/solid";
 import DashboardMobileHeader from "@/components/dashboard/DashboardMobileHeader";
 import KPICard from "@/components/dashboard/admin/KPICard";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { motion } from "framer-motion";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { NotificationBell } from "@/components/dashboard/NotificationBell";
 
 export default function AdminDashboardPage() {
   const [kpis, setKpis] = useState<Record<string, any> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { theme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   const loadKPIs = async () => {
     setIsLoading(true);
@@ -32,6 +34,7 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
+    setMounted(true);
     loadKPIs();
     
     // Simulate a welcome toast or notification
@@ -45,7 +48,7 @@ export default function AdminDashboardPage() {
   if (!kpis) return (
     <div className="p-8 flex items-center justify-center min-h-[60vh]">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-12 h-12 border-4 border-brand-orange border-t-transparent rounded-full animate-spin" />
+        <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
         <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Chargement des données...</p>
       </div>
     </div>
@@ -64,8 +67,8 @@ export default function AdminDashboardPage() {
     },
     {
       name: "Biens Actifs",
-      value: kpis.totalProperties.toLocaleString(),
-      numericValue: kpis.totalProperties,
+      value: kpis.totalBiens.toLocaleString(),
+      numericValue: kpis.totalBiens,
       icon: BuildingIcon,
       change: "+5%",
       changeType: "increase" as const,
@@ -79,8 +82,8 @@ export default function AdminDashboardPage() {
       icon: CurrencyDollarIcon,
       change: "+18%",
       changeType: "increase" as const,
-      color: "bg-amber-500",
-      colorHex: "#F59E0B",
+      color: "bg-orange-500",
+      colorHex: "#F97316",
     },
     {
       name: "Taux Conv. (Visiteurs)",
@@ -100,7 +103,20 @@ export default function AdminDashboardPage() {
   return (
     <div className="p-4 lg:p-10 space-y-10 max-w-[1600px] mx-auto">
       {/* Header Mobile */}
-      <DashboardMobileHeader firstName="Admin" accountType="admin" />
+      <DashboardMobileHeader 
+        firstName="Admin" 
+        accountType="admin"
+        extraActions={
+          <button
+            onClick={loadKPIs}
+            disabled={isLoading}
+            className="w-10 h-10 bg-[#F97316] text-[#0B1C3D] rounded-full flex items-center justify-center shadow-lg border border-white/20 active:scale-90 transition-all disabled:opacity-50"
+            aria-label="Actualiser les données"
+          >
+            <ArrowPathIcon className={cn("w-5 h-5", isLoading && "animate-spin")} />
+          </button>
+        }
+      />
 
       {/* Header Desktop Header */}
       <div className="hidden lg:flex items-center justify-between">
@@ -108,36 +124,40 @@ export default function AdminDashboardPage() {
           <motion.h1 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-4xl font-display font-bold tracking-tight"
-            style={{ color: '#f0d080', textShadow: '0 2px 10px rgba(201,168,76,0.4)' }}
+            className="text-4xl font-display font-bold text-[#1A1A2E] dark:text-white"
           >
             {greeting}
           </motion.h1>
           <div className="flex items-center gap-3 mt-2">
-            <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: 'var(--text-secondary, #94a3b8)' }}>
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#10b981', boxShadow: '0 0 10px rgba(16,185,129,0.5)' }} />
+            <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <div className="w-2 h-2 bg-[#10B981] rounded-full animate-pulse" />
                 Données en temps réel
             </span>
-            <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: 'var(--text-secondary, #94a3b8)' }}>Bienvenue sur Manne Rent</span>
+            <span className="text-slate-300">|</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Bienvenue sur Manne Rent</span>
           </div>
         </div>
         
         <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <NotificationBell className="relative p-2.5 rounded-2xl transition-all shadow-sm" />
+          {mounted && (
+            <div className="flex bg-white dark:bg-white/5 p-1 rounded-2xl border border-slate-100 dark:border-white/10">
+              <button 
+                onClick={() => setTheme("light")}
+                className={cn("p-2 rounded-xl transition-all", theme === "light" ? "bg-slate-100 text-[#F97316] shadow-sm" : "text-slate-400 hover:text-slate-600")}
+              >
+                <SunIcon className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={() => setTheme("dark")}
+                className={cn("p-2 rounded-xl transition-all", theme === "dark" ? "bg-slate-800 text-[#F97316] shadow-sm" : "text-slate-400 hover:text-slate-300")}
+              >
+                <MoonIcon className="w-5 h-5" />
+              </button>
+            </div>
+          )}
 
-          <button 
-            onClick={loadKPIs}
-            className="flex items-center gap-2 px-6 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(201,168,76,0.3)] active:scale-95"
-            style={{
-              background: 'linear-gradient(135deg, #c9a84c, #f0d080)',
-              color: '#0a1628'
-            }}
-          >
-            <ArrowPathIcon className={cn("w-4 h-4", isLoading && "animate-spin")} />
-            Actualiser
-          </button>
+          {/* Notification Bell moved here for consistency if needed, or kept as is */}
+          <NotificationBell className="relative p-2.5 bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl text-slate-400 hover:text-slate-600 dark:hover:text-white transition-all shadow-sm" />
         </div>
       </div>
 
@@ -151,6 +171,15 @@ export default function AdminDashboardPage() {
             transition={{ delay: i * 0.1 }}
           >
             <KPICard {...stat} />
+            {stat.name === "Biens Actifs" && (
+              <div className="text-[11px] opacity-80 text-center mt-3 font-bold text-slate-500 flex justify-center gap-2">
+                <span>🏠 {kpis.totalProperties}</span>
+                <span>•</span>
+                <span>🚗 {kpis.totalVehicles}</span>
+                <span>•</span>
+                <span>🌿 {kpis.totalPlots}</span>
+              </div>
+            )}
           </motion.div>
         ))}
       </div>
@@ -162,7 +191,7 @@ export default function AdminDashboardPage() {
           <div className="flex items-center justify-between mb-10">
             <div>
                 <h3 className="text-2xl font-display font-bold text-[#1A1A2E] dark:text-white flex items-center gap-3">
-                <ArrowTrendingUpIcon className="w-6 h-6 text-[#F59E0B]" />
+                <ArrowTrendingUpIcon className="w-6 h-6 text-[#F97316]" />
                 Tunnel de Conversion
                 </h3>
                 <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">Analyse des flux utilisateurs</p>
@@ -176,14 +205,14 @@ export default function AdminDashboardPage() {
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Visiteurs → Inscrits</span>
                     <p className="text-lg font-bold text-[#1A1A2E] dark:text-white">Acquisition Mobile</p>
                 </div>
-                <span className="text-2xl font-display font-bold text-[#F59E0B]">{kpis.tauxConversionVisiteurInscrit}%</span>
+                <span className="text-2xl font-display font-bold text-[#F97316]">{kpis.tauxConversionVisiteurInscrit}%</span>
               </div>
               <div className="h-4 bg-slate-50 dark:bg-white/5 rounded-full overflow-hidden p-1 border border-slate-100 dark:border-white/5">
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${kpis.tauxConversionVisiteurInscrit}%` }}
                   transition={{ duration: 1.5, ease: "circOut" }}
-                  className="h-full bg-gradient-to-r from-[#F59E0B] to-amber-400 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+                  className="h-full bg-gradient-to-r from-[#F97316] to-orange-400 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.3)]"
                 />
               </div>
             </div>
@@ -219,10 +248,10 @@ export default function AdminDashboardPage() {
 
         {/* Churn & Retention */}
         <div className="bg-[#0B1C3D] border border-white/5 p-10 rounded-[32px] text-white shadow-2xl relative overflow-hidden">
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#F59E0B] opacity-[0.03] rounded-full blur-3xl" />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#F97316] opacity-[0.03] rounded-full blur-3xl" />
           
           <h3 className="text-2xl font-display font-bold mb-10 flex items-center gap-3">
-            <UserPlusIcon className="w-6 h-6 text-[#F59E0B]" />
+            <UserPlusIcon className="w-6 h-6 text-[#F97316]" />
             Rétention
           </h3>
           
@@ -242,7 +271,7 @@ export default function AdminDashboardPage() {
                   cx="88"
                   cy="88"
                   r="80"
-                  stroke="#F59E0B"
+                  stroke="#F97316"
                   strokeWidth="12"
                   fill="transparent"
                   strokeDasharray="502.4"
