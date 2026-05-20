@@ -20,6 +20,7 @@ export type UserRow = {
   full_name: string | null;
   email: string | null;
   whatsapp_number: string | null;
+  phone?: string | null;
   account_type: string | null;
   subscription_plan: string | null;
   avatar_url: string | null;
@@ -102,10 +103,10 @@ function UserModal({ user, onClose }: { user: UserRow; onClose: () => void }) {
               <span className="text-sm text-slate-600 dark:text-white/60">{user.email}</span>
             </div>
           )}
-          {user.whatsapp_number && (
+          {(user.whatsapp_number || user.phone) && (
             <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-white/5 rounded-2xl">
               <PhoneIcon className="w-4 h-4 text-emerald-500" />
-              <span className="text-sm text-slate-600 dark:text-white/60">{user.whatsapp_number}</span>
+              <span className="text-sm text-slate-600 dark:text-white/60">{user.whatsapp_number || user.phone}</span>
             </div>
           )}
           <div className="flex gap-3">
@@ -264,10 +265,10 @@ export function UsersTable({ initialUsers }: { initialUsers: UserRow[] }) {
                         <span className="font-bold text-sm text-[#1A1A2E] dark:text-white group-hover:text-[#F59E0B] transition-colors truncate max-w-[180px]">
                           {user.full_name ?? "Sans nom"}
                         </span>
-                        {user.whatsapp_number && (
+                        {(user.whatsapp_number || user.phone) && (
                           <span className="text-[11px] text-slate-400 dark:text-white/40 flex items-center gap-1">
                             <PhoneIcon className="w-3 h-3 text-emerald-400" />
-                            {user.whatsapp_number}
+                            {user.whatsapp_number || user.phone}
                           </span>
                         )}
                       </div>
